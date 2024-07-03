@@ -2,6 +2,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   const flashcardElement = document.getElementById("flashcard");
   const frontsideElement = document.getElementById("frontside");
   const backsideElement = document.getElementById("backside");
+  const nextButtonElement = document.querySelector(".nextButton");
+  const previousButtonElement = document.querySelector(".previousButton");
   let flashcards = [];
   let currentCardIndex = 0;
   let isVisible = true;
@@ -37,6 +39,16 @@ document.addEventListener("DOMContentLoaded", async () => {
   flashcardElement.addEventListener("click", () => {
     isVisible = !isVisible;
     updateCardVisibility();
+  });
+
+  nextButtonElement.addEventListener("click", () => {
+    currentCardIndex = currentCardIndex + 1;
+    displayFlashcard();
+  });
+
+  previousButtonElement.addEventListener("click", () => {
+    currentCardIndex = currentCardIndex - 1;
+    displayFlashcard();
   });
 
   await loadCards();
