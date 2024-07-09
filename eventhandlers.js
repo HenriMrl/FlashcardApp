@@ -4,6 +4,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   const backsideElement = document.getElementById("backside");
   const nextButtonElement = document.querySelector(".nextButton");
   const previousButtonElement = document.querySelector(".previousButton");
+  const newCardButtonElement = document.querySelector(".newCardButton");
+  const popUpButtonElement = document.querySelector(".popup-content");
   let flashcards = [];
   let currentCardIndex = 0;
   let isVisible = true;
@@ -19,6 +21,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   function displayFlashcard() {
+    popUpButtonElement.style.display = "none";
     if (flashcards.length === 0) return;
     const card = flashcards[currentCardIndex];
     frontsideElement.textContent = card.word;
@@ -42,13 +45,25 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   nextButtonElement.addEventListener("click", () => {
-    currentCardIndex = currentCardIndex + 1;
-    displayFlashcard();
+    if (currentCardIndex < flashcards.length - 1) {
+      currentCardIndex = currentCardIndex + 1;
+      displayFlashcard();
+    } else {
+      alert("No cards left");
+    }
   });
 
   previousButtonElement.addEventListener("click", () => {
-    currentCardIndex = currentCardIndex - 1;
-    displayFlashcard();
+    if (currentCardIndex > 0) {
+      currentCardIndex = currentCardIndex - 1;
+      displayFlashcard();
+    } else {
+      alert("already at the first card");
+    }
+  });
+
+  newCardButtonElement.addEventListener("click", () => {
+    popUpButtonElement.style.display = "flex";
   });
 
   await loadCards();
