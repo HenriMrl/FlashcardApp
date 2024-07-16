@@ -9,6 +9,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   let flashcards = [];
   let currentCardIndex = 0;
   let isVisible = true;
+  let newCardInput = true;
+
+  popUpButtonElement.style.display = "none";
 
   async function loadCards() {
     try {
@@ -21,12 +24,19 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   function displayFlashcard() {
-    popUpButtonElement.style.display = "none";
     if (flashcards.length === 0) return;
     const card = flashcards[currentCardIndex];
     frontsideElement.textContent = card.word;
     backsideElement.textContent = card.answer;
     updateCardVisibility();
+  }
+
+  function displayMessage(message) {
+    const messageContainer = document.getElementById("messageContainer");
+    messageContainer.textContent = message;
+    setTimeout(() => {
+      messageContainer.textContent = "";
+    }, 1500);
   }
 
   function updateCardVisibility() {
@@ -49,7 +59,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       currentCardIndex = currentCardIndex + 1;
       displayFlashcard();
     } else {
-      alert("No cards left");
+      displayMessage("No cards left");
     }
   });
 
@@ -58,12 +68,17 @@ document.addEventListener("DOMContentLoaded", async () => {
       currentCardIndex = currentCardIndex - 1;
       displayFlashcard();
     } else {
-      alert("already at the first card");
+      displayMessage("At first card");
     }
   });
 
   newCardButtonElement.addEventListener("click", () => {
-    popUpButtonElement.style.display = "flex";
+    if (newCardInput) {
+      popUpButtonElement.style.display = "flex";
+    } else {
+      popUpButtonElement.style.display = "none";
+    }
+    newCardInput = !newCardInput;
   });
 
   await loadCards();

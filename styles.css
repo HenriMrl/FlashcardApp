@@ -1,17 +1,76 @@
+@font-face {
+  font-family: fontti;
+  src: url(fonts/franklinFontti.ttf);
+}
+
 body {
-  background: #343541;
-  font-family: Arial, sans-serif;
+  background: #626265;
+  font-family: fontti, Arial, sans-serif;
   text-align: center;
 }
 
 div,
 h1 {
-  color: white;
+  color: #ff7f50;
+}
+
+#messageContainer {
+  position: fixed; /* This keeps the element fixed relative to the viewport */
+  top: 50%; /* Adjust as needed to position vertically */
+  right: 20%; /* Adjust as needed to position horizontally */
+  transform: translate(0, -50%);
+  font-size: 35px;
 }
 
 button {
   background: #4b4f56;
-  color: white;
+  color: #ff7f50;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  padding: 20px;
+  font-size: 16px;
+  font-family: fontti, Arial, sans-serif;
+}
+/*INPUTTIEN CSS! KORJAA MYÖHEMMIN*/
+.inputGroup {
+  position: relative;
+  margin: 20px 0;
+}
+
+.inputGroup input {
+  width: 250px;
+  height: 70px;
+  font-size: 16px;
+  color: #fff;
+  background: transparent;
+  border: 1.2px solid #fff;
+  outline: none;
+}
+
+.inputGroup label {
+  position: absolute;
+  top: 50%;
+  left: 5px;
+  transform: translateY(-50%);
+  font-size: 19px;
+  color: #ff7f50;
+  padding: 0 5px;
+  pointer-events: none;
+  transition: 0.5s;
+}
+
+.inputGroup input:focus ~ label,
+.inputGroup input:valid ~ label {
+  top: 0;
+  background: #626265;
+  font-size: 15px;
+}
+
+/*INPUTTIEN CSS! KORJAA MYÖHEMMIN*/
+button:hover {
+  background: #6c757d;
+  color: #ffffff;
 }
 
 .frontside,
@@ -30,4 +89,5 @@ button {
   backface-visibility: hidden;
   transition: transform 0.6s;
   background: #4b4f56;
+  font-size: 40px;
 }

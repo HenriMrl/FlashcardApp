@@ -8,6 +8,7 @@
     />
     <title>FlashcardApp</title>
     <link rel="stylesheet" href="styles.css" />
+    <div id="messageContainer"></div>
     <script src="eventhandlers.js" defer></script>
   </head>
   <body>
@@ -19,17 +20,16 @@
     <button class="nextButton" type="button">Next card</button>
     <button class="previousButton" type="button">Previous card</button>
     <button class="newCardButton" type="button">Add new card</button>
-    <div id="popupForm" class="popup">
-      <div class="popup-content">
-        <span class="close-btn">&times;</span>
-        <form id="cardForm">
-          <label for="question">Word:</label>
-          <input type="text" id="question" name="question" required />
-          <label for="answer">Answer:</label>
-          <input type="text" id="answer" name="answer" required />
-          <button type="submit">Add Card</button>
-        </form>
+    <div class="popup-content">
+      <div class="inputGroup">
+        <input type="text" required />
+        <label for="word">Word</label>
       </div>
+      <div class="inputGroup">
+        <input type="text" required />
+        <label for="translation">Translation</label>
+      </div>
+      <button class="submitButton" type="button">submit</button>
     </div>
   </body>
 </html>

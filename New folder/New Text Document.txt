@@ -1,0 +1,7 @@
+  <form id="cardForm">
+          <label for="question">Word:</label>
+          <input type="text" id="question" name="question" required />
+          <label for="answer">Answer:</label>
+          <input type="text" id="answer" name="answer" required />
+          <button type="submit">Add Card</button>
+        </form>
