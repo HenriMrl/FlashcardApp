@@ -1,10 +1,30 @@
 [
   {
-    "word": "casa",
-    "answer": "talo"
+    "word": "testikortti1",
+    "answer": "testcard1"
   },
   {
-    "word": "macchina",
-    "answer": "auto"
+    "word": "jokusana",
+    "answer": "someword"
+  },
+  {
+    "word": "testikortti3",
+    "answer": "testcard3"
+  },
+  {
+    "word": "testikortti3",
+    "answer": "testcard3"
+  },
+  {
+    "word": "dsadsad",
+    "answer": "sadsadsa"
+  },
+  {
+    "word": "joopajuu",
+    "answer": "dfsfasdfa"
+  },
+  {
+    "word": "sda",
+    "answer": "dsadas"
   }
 ]

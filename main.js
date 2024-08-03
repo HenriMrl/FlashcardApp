@@ -1,13 +1,27 @@
 const { app, BrowserWindow } = require("electron");
+const chokidar = require("chokidar");
+const path = require("path")
+
+let mainWindow;
 
 const createWindow = () => {
-  const win = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false,
+    },
   });
 
-  win.loadFile("index.html");
+  mainWindow.loadFile("index.html");
 };
+
+const watcher = chokidar.watch(path.join(__dirname, 'flashcards.Json'));
+
+  watcher.on('change', () => {
+    mainWindow.webContents.send('reload-cards');
+  });
 
 app.whenReady().then(() => {
   createWindow();
