@@ -1,6 +1,4 @@
 document.addEventListener("DOMContentLoaded", async () => {
-  const { ipcRenderer } = require('electron');
-  const fs = require('fs');
   const flashcardElement = document.getElementById("flashcard");
   const frontsideElement = document.getElementById("frontside");
   const backsideElement = document.getElementById("backside");
@@ -11,6 +9,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const submitButtonElement = document.querySelector(".submitButton");
   const deleteButtonElement = document.querySelector(".deleteCardButton");
   const cancelButtonElement = document.querySelector(".cancelButton");
+
   let flashcards = [];
   let currentCardIndex = 0;
   let isVisible = true;
@@ -18,9 +17,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   popUpButtonElement.style.display = "none";
 
+  // Fetch flashcards from MongoDB API
   async function loadCards() {
     try {
-      const response = await fetch("flashcards.json");
+      const response = await fetch("http://localhost:5000/flashcards");
       flashcards = await response.json();
       displayFlashcard();
     } catch (error) {
@@ -45,13 +45,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   function updateCardVisibility() {
-    if (isVisible) {
-      frontsideElement.style.display = "flex";
-      backsideElement.style.display = "none";
-    } else {
-      frontsideElement.style.display = "none";
-      backsideElement.style.display = "flex";
-    }
+    frontsideElement.style.display = isVisible ? "flex" : "none";
+    backsideElement.style.display = isVisible ? "none" : "flex";
   }
 
   flashcardElement.addEventListener("click", () => {
@@ -61,7 +56,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   nextButtonElement.addEventListener("click", () => {
     if (currentCardIndex < flashcards.length - 1) {
-      currentCardIndex = currentCardIndex + 1;
+      currentCardIndex++;
       displayFlashcard();
     } else {
       displayMessage("No cards left");
@@ -70,7 +65,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   previousButtonElement.addEventListener("click", () => {
     if (currentCardIndex > 0) {
-      currentCardIndex = currentCardIndex - 1;
+      currentCardIndex--;
       displayFlashcard();
     } else {
       displayMessage("At first card");
@@ -82,75 +77,59 @@ document.addEventListener("DOMContentLoaded", async () => {
     popUpButtonElement.style.display = "flex";
   });
 
-  submitButtonElement.addEventListener("click", () => {
-    const word = document.getElementById('wordInput').value;
-    const answer = document.getElementById('translationInput').value;
+  // Send new flashcard to MongoDB API
+  submitButtonElement.addEventListener("click", async () => {
+    const word = document.getElementById("wordInput").value;
+    const answer = document.getElementById("translationInput").value;
 
-    const card = {
-     "word": word,
-     "answer": answer
-    }
+    console.log("Word input:", word);
+    console.log("Answer input:", answer);
 
-    if (word === "" || answer === "") {
-      displayMessage("Both fields are required.");
-      return;
-    }
-    
-    flashcards.push(card);
-    
-    
-    fs.writeFile('flashcards.json', JSON.stringify(flashcards, null, 2), (err) => {
-      if (err) {
-        console.error("Failed to write file:", err);
+    if (!word || !answer) {
+        displayMessage("Both fields are required.");
         return;
-      } else {
-        displayMessage("Flashcard added successfully");
-        popUpButtonElement.style.display = "none";
-        showInput = false;
-      }
-  });
-
-  });
-
-  cancelButtonElement.addEventListener("click", () => {
-    showInput = false;
-    popUpButtonElement.style.display = "none";
-  });
-
-  const deleteCardAtIndex = (data, index) => {
-    if (index < 0 || index >= data.length) {
-      console.error('Invalid index');
-      return data;
     }
-    data.splice(index, 1); 
-    return data;
-  };
 
-  deleteButtonElement.addEventListener('click', () => {
-    fs.readFile('flashcards.json', 'utf8', (err, data) => {
-      if (err) {
-        console.error('Error reading file:', err);
-        return;
-      }
+    try {
+        const response = await fetch("http://localhost:5000/flashcards", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ word, answer }),
+        });
 
-      let jsonArray = JSON.parse(data);
+        console.log("Response status:", response.status);
+        const responseData = await response.json();
+        console.log("Response data:", responseData);
 
-      const updatedJsonArray = deleteCardAtIndex(jsonArray, currentCardIndex);
-
-      const modifiedJson = JSON.stringify(updatedJsonArray, null, 2);
-
-      fs.writeFile('flashcards.json', modifiedJson, 'utf8', (err) => {
-        if (err) {
-          console.error('Error writing file:', err);
-          return;
+        if (response.ok) {
+            displayMessage("Flashcard added successfully");
+            popUpButtonElement.style.display = "none";
+            await loadCards(); // Reload cards
         }
-        displayMessage('flashcard deleted successfully');
-      });
-    });
-  });
+    } catch (error) {
+        console.error("Error adding flashcard:", error);
+    }
+});
 
-  ipcRenderer.on('reload-cards', () => {
-    loadCards();
+
+  // Delete a flashcard
+  deleteButtonElement.addEventListener("click", async () => {
+    if (flashcards.length === 0) return;
+
+    const cardToDelete = flashcards[currentCardIndex];
+
+    try {
+      const response = await fetch(`http://localhost:5000/flashcards/${cardToDelete._id}`, {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        displayMessage("Flashcard deleted successfully");
+        await loadCards(); // Reload after delete
+      }
+    } catch (error) {
+      console.error("Error deleting flashcard:", error);
+    }
   });
 
   await loadCards();
