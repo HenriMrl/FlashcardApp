@@ -11,12 +11,13 @@ const createWindow = () => {
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
+      webSecurity: false
     },
   });
 
   mainWindow.loadFile("index.html");
+  // mainWindow.webContents.openDevTools();
 };
-
 const watcher = chokidar.watch(path.join(__dirname, 'flashcards.Json'));
 
   watcher.on('change', () => {

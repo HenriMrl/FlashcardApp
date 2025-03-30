@@ -1,14 +1,26 @@
+const fs = require('fs');
+
 document.addEventListener("DOMContentLoaded", async () => {
   const flashcardElement = document.getElementById("flashcard");
   const frontsideElement = document.getElementById("frontside");
   const backsideElement = document.getElementById("backside");
-  const nextButtonElement = document.querySelector(".nextButton");
-  const previousButtonElement = document.querySelector(".previousButton");
   const newCardButtonElement = document.querySelector(".newCardButton");
   const popUpButtonElement = document.querySelector(".popup-content");
   const submitButtonElement = document.querySelector(".submitButton");
   const deleteButtonElement = document.querySelector(".deleteCardButton");
+  const previousCardElement = document.querySelector("#prevCard");
+  const nextCardElement = document.querySelector("#nextCard");
   const cancelButtonElement = document.querySelector(".cancelButton");
+
+  let img = fs.readFileSync('arrowleft.png').toString('base64');
+  let out = '<img src="data:image/png;base64,' + img + '" />';
+  let target = document.getElementById('prevCard');
+  target.insertAdjacentHTML('beforeend', out);
+
+  img = fs.readFileSync('arrowright.png').toString('base64');
+  out = '<img src="data:image/png;base64,' + img + '" />';
+  target = document.getElementById('nextCard');
+  target.insertAdjacentHTML('beforeend', out);
 
   let flashcards = [];
   let currentCardIndex = 0;
@@ -54,7 +66,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     updateCardVisibility();
   });
 
-  nextButtonElement.addEventListener("click", () => {
+  nextCardElement.addEventListener("click", () => {
     if (currentCardIndex < flashcards.length - 1) {
       currentCardIndex++;
       displayFlashcard();
@@ -63,7 +75,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
-  previousButtonElement.addEventListener("click", () => {
+  previousCardElement.addEventListener("click", () => {
     if (currentCardIndex > 0) {
       currentCardIndex--;
       displayFlashcard();
